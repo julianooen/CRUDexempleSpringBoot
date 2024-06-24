@@ -1,0 +1,128 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.10'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'org.sonarqube' version '2.7'
+    id 'nebula.integtest' version '9.6.3'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+sourceCompatibility = '12'
+
+springBoot {
+    buildInfo()
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+jar {
+    enabled = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "2021.0.6")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
+
+    /**
+     * Deserialize Java objects into JSON - LocalDateTime
+     */
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.2'
+
+    /**
+     * Spring Config
+     */
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+    /**
+     * Secret Manager
+     */
+//    implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.4.4'
+
+    /**
+     * Database
+     */
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+
+//    /**
+//     * Database migrations
+//     */
+//    implementation "org.flywaydb:flyway-core"
+
+
+    /**
+     * Documentation dependencies
+     */
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
+
+    /**
+     * Messaging
+     */
+//    implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
+
+    /**
+     * Distributed lock for scheduler
+     */
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:4.43.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.43.0'
+
+    /**
+     * Test dependencies
+     */
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+
+    /**
+     * Integration test dependencies
+     */
+    testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
+    testImplementation 'org.testcontainers:postgresql:1.18.3'
+    testImplementation 'org.testcontainers:localstack:1.19.4'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-oauth2-resource-server'
+    testImplementation 'org.springframework.security:spring-security-oauth2-jose'
+
+
+}
+
+
+
+test {
+    useJUnitPlatform()
+}
