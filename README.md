@@ -1,7 +1,7 @@
 # Base CRUD with postgres
 
  - Docker
- - Java 12
+ - Java 21
 
 ## How to run
 
