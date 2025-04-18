@@ -1,25 +1,22 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.10'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
-    id 'jacoco'
-    id 'org.sonarqube' version '2.7'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+
     id 'nebula.integtest' version '9.6.3'
+
+    id 'jacoco'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '12'
+sourceCompatibility = '21'
 
 springBoot {
     buildInfo()
 }
 
 configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -34,7 +31,7 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2021.0.6")
+    set('springCloudVersion', "2024.0.0")
 }
 
 dependencyManagement {
@@ -44,85 +41,128 @@ dependencyManagement {
 }
 
 dependencies {
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.35'
+    implementation 'org.apache.tomcat:tomcat-servlet-api:10.1.35'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
-
-    /**
-     * Deserialize Java objects into JSON - LocalDateTime
-     */
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.2'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.2'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.2'
-
-    /**
-     * Spring Config
-     */
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-secrets-manager:3.1.1'
 
-    /**
-     * Secret Manager
-     */
-//    implementation 'io.awspring.cloud:spring-cloud-starter-aws-secrets-manager-config:2.4.4'
+    implementation 'io.netty:netty-common:4.1.119.Final'
+    implementation 'io.netty:netty-handler:4.1.119.Final'
+    implementation 'io.netty:netty-resolver:4.1.119.Final'
+    implementation 'io.netty:netty-codec:4.1.119.Final'
+    implementation 'io.netty:netty-buffer:4.1.119.Final'
+    implementation 'io.netty:netty-transport:4.1.119.Final'
+    implementation 'io.netty:netty-transport-classes-epoll:4.1.119.Final'
+    implementation 'io.netty:netty-transport-native-unix-common:4.1.119.Final'
+    implementation 'io.netty:netty-codec-http:4.1.119.Final'
+    implementation 'io.netty:netty-codec-http2:4.1.119.Final'
 
-    /**
-     * Database
-     */
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+//    implementation 'org.flywaydb:flyway-core'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.hibernate.orm:hibernate-core:6.5.3.Final'
+    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
-
-//    /**
-//     * Database migrations
-//     */
-//    implementation "org.flywaydb:flyway-core"
-
-
-    /**
-     * Documentation dependencies
-     */
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
-
-    /**
-     * Messaging
-     */
-//    implementation 'org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE'
-
-    /**
-     * Distributed lock for scheduler
-     */
-    implementation 'net.javacrumbs.shedlock:shedlock-spring:4.43.0'
-    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.43.0'
-
-    /**
-     * Test dependencies
-     */
+//    runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-
-    /**
-     * Integration test dependencies
-     */
-    testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
-    testImplementation 'org.testcontainers:postgresql:1.18.3'
-    testImplementation 'org.testcontainers:localstack:1.19.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-oauth2-resource-server'
-    testImplementation 'org.springframework.security:spring-security-oauth2-jose'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+//    testImplementation 'org.springframework.security:spring-security-test'
+//    testImplementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql:1.18.3'
+//    implementation 'org.springframework.security:spring-security-oauth2-resource-server'
+//    implementation 'org.springframework.security:spring-security-oauth2-jose'
 
 
 }
 
 
 
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+integrationTest {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 test {
     useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir('jacoco')
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.75
+            }
+            excludes = [
+                    '**AuthorizationServicesApiApplication',
+                    '**SecurityConfiguration',
+                    '**ActuatorEndpointConfig',
+                    '**ApiConfiguration',
+                    '**infrastructure.database.**',
+                    '**infrastructure.observability.**',
+                    'br.org.fundacred.authorizationservices.shared.exception.Business*',
+                    'br.org.fundacred.authorizationservices.shared.validation.*',
+                    'br.org.fundacred.authorizationservices.shared.error.ErrorResponse*',
+                    'br.org.fundacred.authorizationservices.shared.locale.LocaleResourceMessage',
+                    'br.org.fundacred.authorizationservices.authorization.infrastructure.audit.Auditable',
+                    'br.org.fundacred.authorizationservices.authorization.infrastructure.audit.AuditableSoftDelete',
+                    'br.org.fundacred.authorizationservices.authorization.infrastructure.module.ModuleEntity',
+                    'br.org.fundacred.authorizationservices.authorization.infrastructure.resource.ResourceEntity'
+            ]
+        }
+    }
+}
+
+test.finalizedBy jacocoTestReport
+check.finalizedBy jacocoTestCoverageVerification
+
+/**
+ * Task that changes the gradle version.
+ * Instructions for use: ./gradlew incrementVersion -PnewVersion='5.1.9'
+ */
+tasks.register('incrementVersion') {
+    if (project.hasProperty('newVersion')) {
+        println "The current version $version has been changed to new Version $newVersion"
+        String newBuildVersion = buildFile.getText().replaceFirst("version = '$version'", "version = '$newVersion'")
+        buildFile.setText(newBuildVersion)
+    }
 }

@@ -1,4 +1,4 @@
-package org.example.infra;
+package org.example.infra.cliente;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
